@@ -6,19 +6,25 @@
 #    By: ttrave <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/01 11:48:10 by ttrave            #+#    #+#              #
-#    Updated: 2023/11/01 12:20:42 by ttrave           ###   ########.fr        #
+#    Updated: 2024/03/13 13:39:24 by ttrave           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# Make parameters
+
 NAME = libft.a
 
-CC = cc
+COMPILER = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAG = -Wall -Wextra -Werror
 
-HEADERS = ./libft.h
+HDR_DIR = hdr/
+OBJ_DIR = obj/
+SRC_DIR = src/
 
-SRCS = ft_atoi.c \
+# Source code
+
+SRC =	ft_atoi.c \
 	ft_in.c \
 	ft_bzero.c \
 	ft_calloc.c \
@@ -54,37 +60,52 @@ SRCS = ft_atoi.c \
 	ft_putstr_fd.c \
 	ft_putendl_fd.c \
 	ft_putnbr_fd.c \
-	ft_lstnew_bonus.c \
-	ft_lstadd_front_bonus.c \
-	ft_lstsize_bonus.c \
-	ft_lstlast_bonus.c \
-	ft_lstadd_back_bonus.c \
-	ft_lstdelone_bonus.c \
-	ft_lstclear_bonus.c \
-	ft_lstiter_bonus.c \
-	ft_lstmap_bonus.c \
+	ft_lstnew.c \
+	ft_lstadd_front.c \
+	ft_lstsize.c \
+	ft_lstlast.c \
+	ft_lstadd_back.c \
+	ft_lstdelone.c \
+	ft_lstclear.c \
+	ft_lstiter.c \
+	ft_lstmap.c \
 	ft_free_arr.c \
 	ft_free_arr_arr.c \
 	ft_strcmp.c \
 	ft_skip_ws.c \
-	ft_strndup.c
+	ft_strndup.c \
+	ft_lstnew_back.c \
+	get_next_line.c \
+	get_next_line_utils.c
 
-OBJS = $(SRCS:.c=.o)
+# Compiled objects
 
-all: $(NAME)
+OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
-$(NAME): $(OBJS)
-	ar rcs $(NAME) $(OBJS) $(HEADERS)
+# Rules
 
-.c.o:
-	$(CC) $(CFLAGS) -I $(HEADERS) -c $< -o $@
+all : $(NAME)
 
-fclean: clean
-	rm -f $(NAME)
+$(NAME) : $(OBJ)
+	@ echo "$(NAME) compiled."
+	@ ar rcs $(NAME) $(OBJ)
 
-clean:
-	rm -f $(OBJS)
+$(OBJ_DIR)%.o : $(SRC_DIR)%.c | $(OBJ_DIR)
+	@ $(COMPILER) $(CFLAG) -I $(HDR_DIR) -c $^ -o $@
 
-re:	fclean all
+$(OBJ_DIR) :
+	@ mkdir -p $@
 
-.PHONY: all fclean clean re
+fclean : clean
+	@ rm -f $(NAME)
+
+clean :
+	@ rm -rf $(OBJ_DIR)
+
+re :	fclean all
+
+heheheha :
+	@ echo "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣛⡉⢹⢛⣛⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⣿⣿⡟⣫⡆⠀⣿⣷⣬⣼⡿⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⣿⣿⣷⡘⢿⣾⡿⠿⠿⠛⢃⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣌⠫⠶⠿⠟⣋⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⣿⣿⡏⠉⠏⠩⣭⣭⠉⠘⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⣿⣿⡇⠠⠤⠴⢯⣭⢤⠤⢄⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⠋⠀⠀⠶⠬⢼⣸⣇⢠⠬⠼⠌⠀⠀⢹⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠙⠙⠛⠉⠀⠀⠀⠀⠠⣾⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⠏⠀⢀⣮⣅⣛⠻⠇⠿⢛⣃⣩⣴⠃⠀⠈⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣧⡀⠀⠘⢿⣿⠿⠟⠻⠟⣛⠻⢿⠿⠀⠀⣼⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⣿⢀⠀⠀⠲⠈⣭⣭⢩⣭⡴⠐⠀⠀⡌⣿⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣿⠇⣾⣷⣦⣀⠀⠀⠈⠀⠀⠀⣠⣴⣿⣿⡸⣿⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⡏⣼⣿⣿⣿⣿⣿⣶⣤⣀⣴⣿⣿⣿⣿⣿⣧⢹⣿⣿⣿⣿⣿\n⣿⣿⣿⣿⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣿⣿⣿⣿⣿"
+
+
+.PHONY : all fclean clean re heheheha
